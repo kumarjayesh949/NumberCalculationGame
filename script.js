@@ -7,11 +7,12 @@ var time = document.querySelector('.between');
 var highScoreText = document.querySelector('.highscore');
 let result;
 let highScore = 0;
+let life = 3;
 let st = 0;
 let score = 0;
 let tout = 10000;
 var decreaseTime = 0;
-var timeAllocated = 0;
+var timeAllocated = 10;
 streakText.textContent = 'Streak of';
 highScoreText.textContent = 0;
 
@@ -43,17 +44,43 @@ function nextNumber(fl = 0) {
 //flag == 0 i.e check was pressed
 function checkNumber(flag) {
     let calc = numEntry.value;
-    newFunction(calc);
+    compareResult(calc);
     Update();
     //if passed 1 it means that check or enter was pressed
     //else time has run out
-    if (!flag) nextNumber(1);
+    if (!flag) {
+        
+        if (st == 0) { 
+            --life;
+            if (life == 2)
+                document.querySelector('.life').textContent = 'II';
+            else if (life == 1)
+                document.querySelector('.life').textContent = 'I';
+            if (!life) {
+                document.querySelector('.life').textContent = '';
+                stopGame();
+                return;
+            }
+        }
+        nextNumber(1);
+
+    }
+}
+
+function stopGame() {
+    document.querySelector('.btnCheck').disabled = true;
+    clearInterval(timerLoop);
+    document.querySelector('.number').textContent = "GAME OVER";
+    time.textContent = "Game Over";
+    numEntry.value = ''
+    numEntry.disabled = true;
 }
 
 //code to handle enter key press on numEntry
 numEntry.addEventListener('keyup', function (event) {
     if (event.keyCode === 13) {
         event.preventDefault();
+        if(life)
         checkNumber(0);
     }
 });
@@ -62,6 +89,11 @@ numEntry.addEventListener('keyup', function (event) {
 document.querySelector('.again').addEventListener('click', function (event) {
     score = 0;
     st = 0;
+    life = 3;
+    document.querySelector('.life').textContent = 'III';
+    numEntry.disabled = false;
+    document.querySelector('.btnCheck').disabled = false;
+    Update();
     clearInterval(timerLoop);
     nextNumber();
     timerLoop = setInterval(timer, 1000);
@@ -69,10 +101,9 @@ document.querySelector('.again').addEventListener('click', function (event) {
 });
 
 //Checks if the number is equal 
-function newFunction(calc) {
+function compareResult(calc) {
     if (calc == result) {
         st++;
-        console.log(st);
     } else
         st = 0;
 }
