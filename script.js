@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 console.log(document.querySelector('.message').textContent);
 var streakText = document.querySelector('.message');
 var numEntry = document.querySelector('.guess');
@@ -12,6 +12,9 @@ let st = 0;
 let score = 0;
 let tout = 10000;
 var decreaseTime = 0;
+let addLim = 101;
+let divLim = 20;
+let mulLim = 20;
 var timeAllocated = 10;
 streakText.textContent = 'Streak of';
 highScoreText.textContent = 0;
@@ -31,11 +34,39 @@ function nextNumber(fl = 0) {
     numEntry.value = '';
     numEntry.focus();
     let t = 1000;
-    let a = Math.floor(Math.random() * 101);
-    let b = Math.floor(Math.random() * 101);
-    result = a + b;
+    let symbol;
+    let a, b;
+    let operation = Math.floor(Math.random() * 4);
+    switch (operation) {
+        case 0:
+            a = Math.floor(Math.random() * addLim);
+            b = Math.floor(Math.random() * addLim);
+            result = a + b;
+            symbol = '+';
+            break;
+        case 1:
+            a = Math.floor(Math.random() * addLim);
+            b = Math.floor(Math.random() * (a + 1));
+            result = a - b;
+            symbol = '-';
+            break;
+        case 2:
+            a = Math.floor(Math.random() * mulLim) + 1;
+            b = Math.floor(Math.random() * mulLim) + 1;
+            result = a * b;
+            symbol = '*';
+            break;
+        case 3:
+            a = Math.floor(Math.random() * divLim) + 1;
+            b = Math.floor(Math.random() * divLim) + 1;
+            result = a;
+            a = a * b;
+            symbol = '/';
+
+    }
+    
     decreaseTime = timeAllocated;
-    document.querySelector('.number').textContent = `${a} + ${b}`;
+    document.querySelector('.number').textContent = `${a} ${symbol} ${b}`;
 }
 
 //check the input when pressed check or enter 
